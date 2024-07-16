@@ -17,7 +17,7 @@ const generate_request = async (req, res) => {
   const user_id = req.params.id
   const code = req.params.code
   console.log(req.body)
- await new Request(req.body).save()
+  await new Request(req.body).save()
   // const employeeId = new mongoose.Types.ObjectId(user_id) // Reemplaza 'employee_id_here' con el ID del empleado específico
   // const productsByCart = req.body.cart.map((i) => ({
   //   product_code: i.product_code,
@@ -150,9 +150,7 @@ const getCatalogByCustomer = async (req, res) => {
   const code = req.params.code
 
   const { percentage } = await Percentage.findOne({ code })
-  const { role,name } = await User.findOne({ _id: id })
-
-
+  const { role, name } = await User.findOne({ _id: id })
 
   let marketData = []
   if (role === SELLER_ROLE) {
@@ -268,6 +266,7 @@ const getProductDetails = async (req, res) => {
   const employee = req.params.seller
   const product_code = req.params.id
   const code = req.params.code
+  console.log(req.params)
   const { role } = await User.findOne({ _id: req.params.seller }, { role: 1 })
 
   let products
