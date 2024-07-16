@@ -257,7 +257,6 @@ const getCatalogByCustomer = async (req, res) => {
       },
     ])
   }
-  console.log(marketData)
 
   res.json(marketData)
 }
