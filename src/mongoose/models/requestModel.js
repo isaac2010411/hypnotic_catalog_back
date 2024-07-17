@@ -66,6 +66,9 @@ const requestModel = mongoose.Schema(
     paymentMethod: {
       type: String,
     },
+    reqType: {
+      type: String,
+    },
   },
   {
     timestamps: true,
