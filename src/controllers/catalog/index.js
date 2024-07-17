@@ -4,145 +4,15 @@ const Inventory = require('../../mongoose/models/inventoryModel')
 const Percentage = require('../../mongoose/models/percentageModel')
 const User = require('../../mongoose/models/userModel')
 const ObjectId = require('mongoose').Types.ObjectId
-
-const Bill = require('../../mongoose/models/billModel')
-const Product = require('../../mongoose/models/productModel')
-const mongoose = require('mongoose')
-const { makeid } = require('../../utils/commonFunctions')
-const Transactions = require('../../mongoose/models/transactionModel')
-const { ADMIN_ROLE } = require('../../config/users/roles/roles')
 const Request = require('../../mongoose/models/requestModel')
 
 const generate_request = async (req, res) => {
-  const user_id = req.params.id
-  const code = req.params.code
-  console.log(req.body)
+  const user_id = req.body.seller
+  const { name } = await User.findOne({ _id: user_id }, { name: 1 })
+
   await new Request(req.body).save()
-  // const employeeId = new mongoose.Types.ObjectId(user_id) // Reemplaza 'employee_id_here' con el ID del empleado específico
-  // const productsByCart = req.body.cart.map((i) => ({
-  //   product_code: i.product_code,
-  //   quantity: i.quantity,
-  //   quantity: i.quantity,
-  // }))
 
-  // const { percentage } = await Percentage.findOne({ code })
-  // const transaction_code = `${makeid(6)}-${makeid(6)}-${makeid(6)}`
-
-  // const products = await Product.aggregate([
-  //   {
-  //     $match: { product_code: { $in: productsByCart.map((j) => j.product_code) } },
-  //   },
-  //   {
-  //     $project: {
-  //       _id: 1,
-  //       image: 1,
-  //       name: 1,
-  //       product_code: 1,
-  //       price: { $add: ['$price', { $multiply: ['$price', { $divide: [percentage, 100] }] }] },
-  //       updatedAt: 1,
-  //     },
-  //   },
-  // ])
-
-  //   if (req.user.role === ADMIN_ROLE) {
-  //     const inventories = await Inventory.find({ product_code: { $in: productsByCart.map((j) => j.product_code) } })
-
-  //     let count = 0
-  //     let maxCount = productsByCart.length
-  //     while (count < maxCount) {
-  //       const currentProductCode = productsByCart[count].product_code
-  //       let quantityToDesasign = productsByCart[count].quantity
-  //       const inventory = inventories.find((j) => j.product_code === currentProductCode)
-  //       let lotes = inventory.lotes.sort((a, b) => a.createdAt - b.createdAt)
-  //       const currentProduct = products.find((j) => j.product_code === currentProductCode)
-
-  //       for (const lote of lotes) {
-  //         if (quantityToDesasign === 0) break
-
-  //         const billList = await Bill.findOne({ bill_code: lote.bill_code })
-  //         const unit_price = billList.details.find((j) => j.product_code === currentProductCode).unit_price
-
-  //         let desassignQuantity = Math.min(lote.quantity, quantityToDesasign)
-
-  //         const transaction = new Transactions({
-  //           transaction_code,
-  //           product_code: currentProductCode,
-  //           user_id: employeeId,
-  //           bill_code: lote.bill_code,
-  //           type: 'sell',
-  //           quantity: desassignQuantity,
-  //           amount: Number(parseFloat(desassignQuantity * currentProduct.price).toFixed(2)),
-  //           comissionAmount: 0,
-  //           cost_of_sale: Number(parseFloat(desassignQuantity * unit_price).toFixed(2)),
-  //           unit_price: unit_price,
-  //           liquidated: true,
-  //         })
-  //         await transaction.save()
-  //         lote.quantity -= desassignQuantity
-  //         quantityToDesasign -= desassignQuantity
-
-  //         lotes = lotes.filter((lote) => lote.quantity > 0)
-
-  //         await Inventory.updateOne(
-  //           { product_code: currentProductCode },
-  //           { $set: { lotes, total: (inventory.total -= desassignQuantity) } }
-  //         )
-  //       }
-
-  //       count += 1
-  //     }
-  //   } else {
-  //     const consigments = await Consignment.find({
-  //       product_code: { $in: productsByCart.map((j) => j.product_code) },
-  //     }).sort({ createdAt: 1 })
-
-  //     let count = 0
-  //     let maxCount = productsByCart.length
-  //     while (count < maxCount) {
-  //       const currentProductCode = productsByCart[count].product_code
-  //       let quantityToDesasign = productsByCart[count].quantity
-
-  //       const productConsigments = consigments.filter((j) => j.product_code === currentProductCode)
-  //       const currentProduct = products.find((j) => j.product_code === currentProductCode)
-
-  //       for (const consignment of productConsigments) {
-  //         const billList = await Bill.findOne({ bill_code: consignment.bill_code })
-  //         const unit_price = billList.details.find((j) => j.product_code === currentProductCode).unit_price
-
-  //         let desassignQuantity = Math.min(consignment.quantity, quantityToDesasign)
-
-  //         if (quantityToDesasign === 0) break
-
-  //         const transaction = new Transactions({
-  //           transaction_code,
-  //           product_code: currentProductCode,
-  //           user_id: employeeId,
-  //           bill_code: consignment.bill_code,
-  //           type: 'sell',
-  //           quantity: desassignQuantity,
-  //           amount: Number(parseFloat(desassignQuantity * currentProduct.price).toFixed(2)),
-  //           comissionAmount: Number(parseFloat(desassignQuantity * currentProduct.price * 0.2).toFixed(2)),
-  //           cost_of_sale: Number(parseFloat(desassignQuantity * unit_price).toFixed(2)),
-  //           unit_price: unit_price,
-  //           liquidated: false,
-  //         })
-
-  //         await transaction.save()
-  //         consignment.quantity -= desassignQuantity
-  //         quantityToDesasign -= desassignQuantity
-
-  //         if (consignment.quantity < 1) {
-  //           await Consignment.deleteOne({ _id: consignment._id })
-  //         } else {
-  //           await consignment.save()
-  //         }
-  //       }
-
-  //       count += 1
-  //     }
-  //   }
-
-  res.json({})
+  res.json({ name })
 }
 
 const getCatalogByCustomer = async (req, res) => {
