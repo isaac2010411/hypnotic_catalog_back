@@ -22,6 +22,9 @@ const getCatalogByCustomer = async (req, res) => {
   const { percentage } = await Percentage.findOne({ code })
   const { role, name } = await User.findOne({ _id: id })
 
+  if (!percentage || !role) {
+    return res.json([])
+  }
   let marketData = []
   if (role === SELLER_ROLE) {
     marketData = await Consignment.aggregate([
