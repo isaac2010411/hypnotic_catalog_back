@@ -7,7 +7,7 @@ const amountReducer = (amounts) => {
 }
 
 const generateCode = () => {
-  const number = ()=> Math.floor(Math.random() * 9)
+  const number = () => Math.floor(Math.random() * 9)
   return `A${number()}${number()}${number()}`
 }
 
@@ -35,17 +35,18 @@ const sumProductsAndShippingAmounts = (productAmount, shippingAmount) => {
   return sum
 }
 function makeid(length) {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  var result = ''
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  var charactersLength = characters.length
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
   }
-  return result;
+  return result
 }
 module.exports = {
   makeid,
   amountReducer,
   changeProductFields,
-  sumProductsAndShippingAmounts,generateCode
+  sumProductsAndShippingAmounts,
+  generateCode,
 }
